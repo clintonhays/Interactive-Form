@@ -4,18 +4,22 @@
 
 const nameInput = document.getElementById('name');
 const jobRoleSelect = document.querySelector('#title');
-const jobRoleOptions = document.querySelectorAll('#title option');
 const otherRole = document.getElementById('other-job-role');
+const designSelect = document.getElementById('design');
+const designOptions = document.querySelectorAll('#design option');
+const colorSelect = document.getElementById('color');
+const punsColors = document.querySelectorAll('[data-theme="js puns"]');
+const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 
 /**
- * on page load settings
+ * On Page Load Settings
  */
 
-// focus on name input element
 nameInput.focus();
 
-// hide other job role input element
 otherRole.classList.add('hidden');
+
+colorSelect.disabled = true;
 
 /**
  * Event Listeners
@@ -24,5 +28,28 @@ otherRole.classList.add('hidden');
 jobRoleSelect.addEventListener('change', (e) => {
   if (e.target.value === 'other') {
     otherRole.classList.remove('hidden');
+  } else if (e.target.value !== 'other') {
+    otherRole.classList.add('hidden');
+  }
+});
+
+designSelect.addEventListener('change', (e) => {
+  colorSelect.disabled = false;
+  const design = e.target.value;
+
+  if (design === 'js puns') {
+    heartColors.forEach((color) => {
+      color.className = 'hidden';
+    });
+    punsColors.forEach((color) => {
+      color.classList.remove('hidden');
+    });
+  } else if (design === 'heart js') {
+    punsColors.forEach((color) => {
+      color.className = 'hidden';
+    });
+    heartColors.forEach((color) => {
+      color.classList.remove('hidden');
+    });
   }
 });
