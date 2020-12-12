@@ -6,7 +6,6 @@ const nameInput = document.getElementById('name');
 const jobRoleSelect = document.querySelector('#title');
 const otherRole = document.getElementById('other-job-role');
 const designSelect = document.getElementById('design');
-const designOptions = document.querySelectorAll('#design option');
 const colorSelect = document.getElementById('color');
 const punsColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
@@ -35,6 +34,7 @@ jobRoleSelect.addEventListener('change', (e) => {
 
 designSelect.addEventListener('change', (e) => {
   colorSelect.disabled = false;
+
   const design = e.target.value;
 
   if (design === 'js puns') {
