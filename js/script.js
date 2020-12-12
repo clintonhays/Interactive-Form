@@ -9,6 +9,10 @@ const designSelect = document.getElementById('design');
 const colorSelect = document.getElementById('color');
 const punsColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
+const activitiesSet = document.getElementById('activities');
+const activitiesCost = document.getElementById('activities-cost');
+const activities = document.querySelectorAll('[data-day-and-time]');
+let totalCost = 0;
 
 /**
  * On Page Load Settings
@@ -51,5 +55,18 @@ designSelect.addEventListener('change', (e) => {
     heartColors.forEach((color) => {
       color.classList.remove('hidden');
     });
+  }
+});
+
+activitiesSet.addEventListener('change', (e) => {
+  const activity = e.target;
+  const cost = activity.getAttribute('data-cost');
+  const time = activity.getAttribute('date-day-and-time');
+
+  if (activity.checked === true) {
+    totalCost += +cost;
+  }
+  if (activity.checked === false) {
+    totalCost -= +cost;
   }
 });
