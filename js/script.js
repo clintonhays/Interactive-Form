@@ -13,6 +13,10 @@ const activitiesSet = document.getElementById('activities');
 const activitiesCost = document.getElementById('activities-cost');
 const activities = document.querySelectorAll('[data-day-and-time]');
 let totalCost = 0;
+const payment = document.getElementById('payment');
+const ccInfo = document.getElementById('credit-card');
+const paypalInfo = document.getElementById('paypal');
+const bitcoinInfo = document.getElementById('bitcoin');
 
 /**
  * On Page Load Settings
@@ -23,6 +27,10 @@ nameInput.focus();
 otherRole.classList.add('hidden');
 
 colorSelect.disabled = true;
+
+ccInfo.hidden = true;
+paypalInfo.hidden = true;
+bitcoinInfo.hidden = true;
 
 /**
  * Event Listeners
@@ -61,7 +69,6 @@ designSelect.addEventListener('change', (e) => {
 activitiesSet.addEventListener('change', (e) => {
   const activity = e.target;
   const cost = activity.getAttribute('data-cost');
-  const time = activity.getAttribute('date-day-and-time');
 
   if (activity.checked === true) {
     totalCost += +cost;
@@ -69,4 +76,10 @@ activitiesSet.addEventListener('change', (e) => {
   if (activity.checked === false) {
     totalCost -= +cost;
   }
+
+  activitiesCost.textContent = `$${totalCost}`;
+});
+
+payment.addEventListener('change', (e) => {
+  value = e.target.value;
 });
