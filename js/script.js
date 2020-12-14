@@ -47,12 +47,16 @@ const zipRegEx = /^\d{5}$/;
  * On Page Load Settings
  */
 
+// Load page with focus on name input
 nameInput.focus();
 
-otherRole.classList.add('hidden');
+// Hide other job role input until chosen
+otherRole.hidden = true;
 
+// Disable tshirt color select until style is chosen
 colorSelect.disabled = true;
 
+// Hide credit card inputs
 ccInfo.hidden = true;
 paypalInfo.hidden = true;
 bitcoinInfo.hidden = true;
@@ -61,6 +65,7 @@ bitcoinInfo.hidden = true;
  * Helper Functions
  */
 
+// Updates workshop total to be used in activitiesValidator function
 activitiesSet.addEventListener('change', (e) => {
   e.target.checked ? workshops++ : workshops--;
 });
@@ -69,6 +74,7 @@ activitiesSet.addEventListener('change', (e) => {
  * Focus Activity Checkboxes
  */
 
+// Apply focus and blur to checkboxes
 activityCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener('focus', (e) => {
     e.target.parentElement.classList.add('focus');
@@ -80,6 +86,13 @@ activityCheckboxes.forEach((checkbox) => {
 
 /**
  * Form Validation
+ */
+
+/**
+ * Validate user input fields 
+ * @param {object} input input element to be validated
+ * @param {object} regex expression to test the input value
+ * @param {event} e used to prevent default behavior in case input value is invalid
  */
 
 const validator = (input, regex, e) => {
@@ -98,6 +111,11 @@ const validator = (input, regex, e) => {
   }
 };
 
+/**
+ * Validate at least 1 activity is chosen
+ * @param {event} e used to prevent default behavior in case no activities are selected
+ */
+
 const activitiesValidator = (e) => {
   const activitySectionIsValid = workshops > 0;
 
@@ -113,36 +131,52 @@ const activitiesValidator = (e) => {
  * Event Listeners
  */
 
+// Reveal input for other job type
 jobRoleSelect.addEventListener('change', (e) => {
   if (e.target.value === 'other') {
-    otherRole.classList.remove('hidden');
+    otherRole.hidden = false;
   } else if (e.target.value !== 'other') {
-    otherRole.classList.add('hidden');
+    otherRole.hidden = true;
   }
 });
 
+// Enable color selection based on tshirt design choice
 designSelect.addEventListener('change', (e) => {
   colorSelect.disabled = false;
-
   const design = e.target.value;
 
+  /*
+    Using forEach to iterate through color select option and 
+    hiding/displaying based on design selection
+    TODO: Make this more DRY
+    PROBLEM: Seems so redundant
+    SOLUTION: ??? Refactor somehow...
+  */
   if (design === 'js puns') {
     heartColors.forEach((color) => {
-      color.className = 'hidden';
+      color.hidden = true;
     });
     punsColors.forEach((color) => {
-      color.classList.remove('hidden');
+      color.hidden = false;
     });
   } else if (design === 'heart js') {
     punsColors.forEach((color) => {
-      color.className = 'hidden';
+      color.hidden = true;
     });
     heartColors.forEach((color) => {
-      color.classList.remove('hidden');
+      color.hidden = false;
     });
   }
 });
 
+/*
+  TODO: Implement disabling of checkboxes based on matching time
+  PROBLEM: Not sure how to iterate through activities and compare 
+  [data-day-and-time] attribute. When using a forEach loop to compare
+  attributes, I can disable but not reenable. 
+  SOLUTION: ??? if statement with forEach to iterate through activities
+*/
+// Update cost total based on activity selections
 activitiesSet.addEventListener('change', (e) => {
   const activity = e.target;
   const cost = activity.getAttribute('data-cost');
@@ -157,8 +191,16 @@ activitiesSet.addEventListener('change', (e) => {
   activitiesCost.textContent = `$${totalCost}`;
 });
 
+// Hide or display cc info inputs based on payment selection
 payment.addEventListener('change', (e) => {
   value = e.target.value;
+
+  /*
+    TODO: Refactor if/else if block to be more DRY
+    PROBLEM: Not sure if there is actually a problem here,
+    but seems like it could be more DRY
+    SOLUTION: Switch statement? Refactor to function? 
+  */
 
   if (value === ccInfo.id) {
     ccInfo.hidden = false;
@@ -175,6 +217,12 @@ payment.addEventListener('change', (e) => {
   }
 });
 
+/*
+  TODO: Fix live error checking.
+  PROBLEM: Initial load displays error styling on inputs
+  SOLUTION: Refactor validator function? Use different event as listener?
+*/
+
 // nameInput.addEventListener('keyup', (e) => {
 //   validator(nameInput, nameRegEx, e);
 // });
@@ -183,11 +231,13 @@ payment.addEventListener('change', (e) => {
 //   validator(emailInput, emailRegEx, e);
 // });
 
+// Validate inputs and activity selections on submit
 form.addEventListener('submit', (e) => {
   validator(nameInput, nameRegEx, e);
   validator(emailInput, emailRegEx, e);
   activitiesValidator(e);
 
+  // Only validate cc inputes if it is chosen as payment method
   if (payment.value === 'credit-card') {
     validator(ccNum, ccRegEx, e);
     validator(zip, zipRegEx, e);
