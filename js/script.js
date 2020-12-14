@@ -19,7 +19,6 @@ const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 // Activities Fields
 const activitiesSet = document.getElementById('activities');
 const activitiesCost = document.getElementById('activities-cost');
-const activities = document.querySelectorAll('[data-day-and-time]');
 const activityCheckboxes = document.querySelectorAll('[type="checkbox"]');
 let workshops = 0;
 let totalCost = 0;
@@ -169,23 +168,37 @@ designSelect.addEventListener('change', (e) => {
   }
 });
 
-/*
-  TODO: Implement disabling of checkboxes based on matching time
-  PROBLEM: Not sure how to iterate through activities and compare 
-  [data-day-and-time] attribute. When using a forEach loop to compare
-  attributes, I can disable but not reenable. 
-  SOLUTION: ??? if statement with forEach to iterate through activities
-*/
-// Update cost total based on activity selections
+// Update cost and prevent selection of overlapping activity times
 activitiesSet.addEventListener('change', (e) => {
   const activity = e.target;
-  const cost = activity.getAttribute('data-cost');
+  const activityCost = activity.getAttribute('data-cost');
+  const activityTime = activity.getAttribute('data-day-and-time');
 
+  /*
+    Iterate through activities, for each activity compare target day and time attribute
+    to the current iteration day and time attribute. If the attributes match and the target
+    is not the current activity being checked, the checkbox is disabled. The logical && operator
+    is necessary to exclude the target from being disabled based on a matching attribute. If the
+    box is unchecked, the disabled property is set to false.
+  */
+  activityCheckboxes.forEach((box) => {
+    const boxTime = box.getAttribute('data-day-and-time');
+
+    if (activityTime === boxTime && activity !== box) {
+      if (activity.checked) {
+        box.disabled = true;
+      } else {
+        box.disabled = false;
+      }
+    }
+  });
+
+  // Add or subtract activity cost from totalcost
   if (activity.checked === true) {
-    totalCost += +cost;
+    totalCost += +activityCost;
   }
   if (activity.checked === false) {
-    totalCost -= +cost;
+    totalCost -= +activityCost;
   }
 
   activitiesCost.textContent = `$${totalCost}`;
