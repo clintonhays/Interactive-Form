@@ -103,6 +103,9 @@ const activitiesValidator = (e) => {
 
   if (!activitySectionIsValid) {
     e.preventDefault();
+    activitiesSet.classList.add('not-valid');
+    activitiesSet.classList.remove('valid');
+    activitiesSet.lastElementChild.style.display = 'initial';
   }
 };
 
@@ -172,11 +175,22 @@ payment.addEventListener('change', (e) => {
   }
 });
 
+// nameInput.addEventListener('keyup', (e) => {
+//   validator(nameInput, nameRegEx, e);
+// });
+
+// emailInput.addEventListener('keyup', (e) => {
+//   validator(emailInput, emailRegEx, e);
+// });
+
 form.addEventListener('submit', (e) => {
   validator(nameInput, nameRegEx, e);
   validator(emailInput, emailRegEx, e);
   activitiesValidator(e);
-  validator(ccNum, ccRegEx, e);
-  validator(zip, zipRegEx, e);
-  validator(cvv, cvvRegEx, e);
+
+  if (payment.value === 'credit-card') {
+    validator(ccNum, ccRegEx, e);
+    validator(zip, zipRegEx, e);
+    validator(cvv, cvvRegEx, e);
+  }
 });
