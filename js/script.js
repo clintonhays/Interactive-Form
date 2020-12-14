@@ -55,8 +55,8 @@ otherRole.hidden = true;
 // Disable tshirt color select until style is chosen
 colorSelect.disabled = true;
 
-// Hide credit card inputs
-ccInfo.hidden = true;
+// Set default payment choice to cc, hide paypal, bitcoin info
+payment.value = 'credit-card';
 paypalInfo.hidden = true;
 bitcoinInfo.hidden = true;
 
@@ -123,6 +123,10 @@ const activitiesValidator = (e) => {
     activitiesSet.classList.add('not-valid');
     activitiesSet.classList.remove('valid');
     activitiesSet.lastElementChild.style.display = 'initial';
+  } else {
+    activitiesSet.classList.add('valid');
+    activitiesSet.classList.remove('not-valid');
+    activitiesSet.lastElementChild.style.display = 'none';
   }
 };
 
