@@ -2,23 +2,45 @@
  * Global Variables
  */
 
+const form = document.getElementsByTagName('form')[0];
+
+// Basic Info Fields
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const jobRoleSelect = document.querySelector('#title');
 const otherRole = document.getElementById('other-job-role');
+
+// Tshirt Fields
 const designSelect = document.getElementById('design');
 const colorSelect = document.getElementById('color');
 const punsColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
+
+// Activities Fields
 const activitiesSet = document.getElementById('activities');
 const activitiesCost = document.getElementById('activities-cost');
 const activities = document.querySelectorAll('[data-day-and-time]');
 let workshops = 0;
 let totalCost = 0;
+
+// Payment Fields
 const payment = document.getElementById('payment');
 const ccInfo = document.getElementById('credit-card');
 const paypalInfo = document.getElementById('paypal');
 const bitcoinInfo = document.getElementById('bitcoin');
+const ccNum = document.getElementById('cc-num');
+const cvv = document.getElementById('cvv');
+const zip = document.getElementById('zip');
+
+/**
+ * RegEx Variables
+ */
+
+const nameRegEx = /^[A-Za-z]+ ?[A-Za-z]*? ?[A-Za-z]*?$/i;
+const emailRegEx = /^[^@]+@[^@.]+\.[a-z0-9]+$/i;
+const ccRegEx = /^\d{13}(\d{1,3})?$/;
+const cvvRegEx = /^\d{3}$/;
+const zipRegEx = /^\d{5}$/;
 
 /**
  * On Page Load Settings
@@ -40,31 +62,27 @@ bitcoinInfo.hidden = true;
 
 activitiesSet.addEventListener('change', (e) => {
   e.target.checked ? workshops++ : workshops--;
-  console.log(workshops);
 });
 
 /**
  * Form Validation
  */
 
-const nameValidator = () => {
-  const nameValue = nameInput.value;
-  const nameIsValid = /^[a-z]+ ?[a-z]*? ?[a-z]*?$/i.test(nameValue);
+const validator = (input, regex, e) => {
+  const value = input.value;
+  const isValid = regex.test(value);
 
-  return nameIsValid;
+  if (!isValid) {
+    e.preventDefault();
+  }
 };
 
-const emailValidator = () => {
-  const emailValue = emailInput.value;
-  const emailIsValid = /^[^@]+@[^@.]+\.[a-z0-9]+$/i.test(emailValue);
-
-  return emailIsValid;
-};
-
-const activitiesValidator = () => {
+const activitiesValidator = (e) => {
   const activitySectionIsValid = workshops > 0;
 
-  return activitySectionIsValid;
+  if (!activitySectionIsValid) {
+    e.preventDefault();
+  }
 };
 
 /**
@@ -131,4 +149,13 @@ payment.addEventListener('change', (e) => {
     paypalInfo.hidden = true;
     ccInfo.hidden = true;
   }
+});
+
+form.addEventListener('submit', (e) => {
+  validator(nameInput, nameRegEx, e);
+  validator(emailInput, emailRegEx, e);
+  activitiesValidator(e);
+  validator(ccNum, ccRegEx, e);
+  validator(zip, zipRegEx, e);
+  validator(cvv, cvvRegEx, e);
 });
