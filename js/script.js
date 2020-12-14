@@ -20,6 +20,7 @@ const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 const activitiesSet = document.getElementById('activities');
 const activitiesCost = document.getElementById('activities-cost');
 const activities = document.querySelectorAll('[data-day-and-time]');
+const activityCheckboxes = document.querySelectorAll('[type="checkbox"]');
 let workshops = 0;
 let totalCost = 0;
 
@@ -65,6 +66,19 @@ activitiesSet.addEventListener('change', (e) => {
 });
 
 /**
+ * Focus Activity Checkboxes
+ */
+
+activityCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener('focus', (e) => {
+    e.target.parentElement.classList.add('focus');
+  });
+  checkbox.addEventListener('blur', (e) => {
+    e.target.parentElement.classList.remove('focus');
+  });
+});
+
+/**
  * Form Validation
  */
 
@@ -74,6 +88,13 @@ const validator = (input, regex, e) => {
 
   if (!isValid) {
     e.preventDefault();
+    input.parentElement.classList.add('not-valid');
+    input.parentElement.classList.remove('valid');
+    input.parentElement.lastElementChild.style.display = 'initial';
+  } else {
+    input.parentElement.classList.remove('not-valid');
+    input.parentElement.classList.add('valid');
+    input.parentElement.lastElementChild.style.display = 'none';
   }
 };
 
