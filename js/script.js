@@ -37,7 +37,7 @@ const zip = document.getElementById('zip');
  */
 
 const nameRegEx = /^[A-Za-z]+ ?[A-Za-z]*? ?[A-Za-z]*?$/i;
-const emailRegEx = /^[^@]+@[^@.]+\.[a-z0-9]+$/i;
+const emailRegEx = /^[^@\s]+@[^@.]+\.[a-z0-9]+$/i;
 const ccRegEx = /^\d{13}(\d{1,3})?$/;
 const cvvRegEx = /^\d{3}$/;
 const zipRegEx = /^\d{5}$/;
@@ -94,12 +94,11 @@ activityCheckboxes.forEach((checkbox) => {
  * @param {event} e used to prevent default behavior in case input value is invalid
  */
 
-const validator = (input, regex, e) => {
+const validator = (input, regex) => {
   const value = input.value;
   const isValid = regex.test(value);
 
   if (!isValid) {
-    e.preventDefault();
     input.parentElement.classList.add('not-valid');
     input.parentElement.classList.remove('valid');
     input.parentElement.lastElementChild.style.display = 'initial';
@@ -108,6 +107,29 @@ const validator = (input, regex, e) => {
     input.parentElement.classList.add('valid');
     input.parentElement.lastElementChild.style.display = 'none';
   }
+
+  return isValid;
+};
+
+const emailValidator = (input, regex) => {
+  value = input.value;
+  isValid = regex.test(value);
+
+  if (!isValid) {
+    input.parentElement.classList.add('not-valid');
+    input.parentElement.classList.remove('valid');
+    input.parentElement.lastElementChild.style.display = 'initial';
+  }
+  if (value.includes(' ')) {
+    input.parentElement.lastElementChild.textContent = 'Email must not include spaces';
+    input.parentElement.lastElementChild.style.display = 'initial';
+  }
+  if (!value.includes('@')) {
+    input.parentElement.lastElementChild.textContent = 'Email must include @';
+    input.parentElement.lastElementChild.style.display = 'initial';
+  }
+
+  return isValid;
 };
 
 /**
@@ -240,24 +262,29 @@ payment.addEventListener('change', (e) => {
   SOLUTION: Refactor validator function? Use different event as listener?
 */
 
-// nameInput.addEventListener('keyup', (e) => {
-//   validator(nameInput, nameRegEx, e);
-// });
+nameInput.addEventListener('keyup', () => {
+  validator(nameInput, nameRegEx);
+});
 
-// emailInput.addEventListener('keyup', (e) => {
-//   validator(emailInput, emailRegEx, e);
-// });
+emailInput.addEventListener('keyup', () => {
+  emailValidator(emailInput, emailRegEx);
+});
 
 // Validate inputs and activity selections on submit
 form.addEventListener('submit', (e) => {
-  validator(nameInput, nameRegEx, e);
-  validator(emailInput, emailRegEx, e);
-  activitiesValidator(e);
+  e.preventDefault();
+  emailValidator(emailInput, emailRegEx);
+  const name = validator(nameInput, nameRegEx);
+  // const activies = activitiesValidator();
+
+  if (name === false) {
+    e.preventDefault();
+  }
 
   // Only validate cc inputes if it is chosen as payment method
   if (payment.value === 'credit-card') {
-    validator(ccNum, ccRegEx, e);
-    validator(zip, zipRegEx, e);
-    validator(cvv, cvvRegEx, e);
+    validator(ccNum, ccRegEx);
+    validator(zip, zipRegEx);
+    validator(cvv, cvvRegEx);
   }
 });
