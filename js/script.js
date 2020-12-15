@@ -37,7 +37,7 @@ const zip = document.getElementById('zip');
  */
 
 const nameRegEx = /^[A-Za-z]+ ?[A-Za-z]*? ?[A-Za-z]*?$/i;
-const emailRegEx = /^[^@\s]+@[^@.]+\.[a-z0-9]+$/i;
+const emailRegEx = /^[^\s@]+@[^\s@.]+\.([a-z])+$/i;
 const ccRegEx = /^\d{13}(\d{1,3})?$/;
 const cvvRegEx = /^\d{3}$/;
 const zipRegEx = /^\d{5}$/;
@@ -69,6 +69,19 @@ activitiesSet.addEventListener('change', (e) => {
   e.target.checked ? workshops++ : workshops--;
 });
 
+// Generic Error Message
+const error = (input) => {
+  input.parentElement.classList.add('not-valid');
+  input.parentElement.classList.remove('valid');
+  input.parentElement.lastElementChild.style.display = 'initial';
+};
+
+const valid = (input) => {
+  input.parentElement.classList.remove('not-valid');
+  input.parentElement.classList.add('valid');
+  input.parentElement.lastElementChild.style.display = 'none';
+};
+
 /**
  * Focus Activity Checkboxes
  */
@@ -99,13 +112,9 @@ const validator = (input, regex) => {
   const isValid = regex.test(value);
 
   if (!isValid) {
-    input.parentElement.classList.add('not-valid');
-    input.parentElement.classList.remove('valid');
-    input.parentElement.lastElementChild.style.display = 'initial';
+    error(input);
   } else {
-    input.parentElement.classList.remove('not-valid');
-    input.parentElement.classList.add('valid');
-    input.parentElement.lastElementChild.style.display = 'none';
+    valid(input);
   }
 
   return isValid;
@@ -116,17 +125,22 @@ const emailValidator = (input, regex) => {
   isValid = regex.test(value);
 
   if (!isValid) {
-    input.parentElement.classList.add('not-valid');
-    input.parentElement.classList.remove('valid');
-    input.parentElement.lastElementChild.style.display = 'initial';
+    error(input);
+    if (/\s/.test(value)) {
+      input.parentElement.lastElementChild.textContent = 'Email must not include spaces';
+      input.parentElement.lastElementChild.style.display = 'initial';
+    }
+    if (!value.includes('@')) {
+      input.parentElement.lastElementChild.textContent = 'Email must include @';
+      input.parentElement.lastElementChild.style.display = 'initial';
+    }
+  } else {
+    input.parentElement.lastElementChild.style.display = 'none';
   }
-  if (value.includes(' ')) {
-    input.parentElement.lastElementChild.textContent = 'Email must not include spaces';
-    input.parentElement.lastElementChild.style.display = 'initial';
-  }
-  if (!value.includes('@')) {
-    input.parentElement.lastElementChild.textContent = 'Email must include @';
-    input.parentElement.lastElementChild.style.display = 'initial';
+  if (isValid) {
+    input.parentElement.classList.remove('not-valid');
+    input.parentElement.classList.add('valid');
+    input.parentElement.lastElementChild.style.display = 'none';
   }
 
   return isValid;
