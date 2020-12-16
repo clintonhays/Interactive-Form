@@ -64,11 +64,6 @@ bitcoinInfo.hidden = true;
  * Helper Functions
  */
 
-// Updates workshop total to be used in activitiesValidator function
-activitiesSet.addEventListener('change', (e) => {
-  e.target.checked ? workshops++ : workshops--;
-});
-
 // Generic Error Message
 const error = (input) => {
   input.parentElement.classList.add('not-valid');
@@ -147,23 +142,23 @@ const emailValidator = (input, regex) => {
 };
 
 /**
- * Validate at least 1 activity is chosen
- * @param {event} e used to prevent default behavior in case no activities are selected
- */
+  Validate at least 1 activity is chosen
+*/
 
-const activitiesValidator = (e) => {
-  const activitySectionIsValid = workshops > 0;
+const activitiesValidator = () => {
+  const isValid = workshops > 0;
 
-  if (!activitySectionIsValid) {
-    e.preventDefault();
+  if (!isValid) {
     activitiesSet.classList.add('not-valid');
     activitiesSet.classList.remove('valid');
     activitiesSet.lastElementChild.style.display = 'initial';
-  } else {
+  } else if (isValid) {
     activitiesSet.classList.add('valid');
     activitiesSet.classList.remove('not-valid');
     activitiesSet.lastElementChild.style.display = 'none';
   }
+
+  return isValid;
 };
 
 /**
@@ -284,14 +279,28 @@ emailInput.addEventListener('keyup', () => {
   emailValidator(emailInput, emailRegEx);
 });
 
+activityCheckboxes.forEach((activity) => {
+  activity.addEventListener('change', () => {
+    activity.checked ? workshops++ : workshops--;
+    activitiesValidator();
+  });
+});
+
 // Validate inputs and activity selections on submit
 form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  emailValidator(emailInput, emailRegEx);
   const name = validator(nameInput, nameRegEx);
-  // const activies = activitiesValidator();
+  const email = emailValidator(emailInput, emailRegEx);
+  const activities = activitiesValidator();
 
   if (name === false) {
+    e.preventDefault();
+  }
+
+  if (email === false) {
+    e.preventDefault();
+  }
+
+  if (activities === false) {
     e.preventDefault();
   }
 
