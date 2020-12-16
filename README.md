@@ -10,6 +10,10 @@ The activities fieldset is validated by making sure that at least 1 activity is 
 
 HTML5 email validation was avoided in favor of validation through JavaScript for the purpose of practice. 
 
+### Real Time Validation
+
+Real time validation is used on the name, email and activities elements. For name and email, keyup event listeners are employed. For the activity section change event lsiteners are used on each checkbox to update the validator accordingly. In addition, the email validation supports custom error messages for missing @ and spaces within the address. Leading and trailing spaces are handled via the trim() property.
+
 ## Accessibility
 
  The form focuses on accessibility by making sure that it can be navigated with tab and shift+tab. Each input has clear focus feedback, all inputs include labels, and the form is separated into logical sections. If there is an error due to invalid information, the user is presented with highly visible iconography and is given clear instructions on how to fix the error.
