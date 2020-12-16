@@ -64,13 +64,14 @@ bitcoinInfo.hidden = true;
  * Helper Functions
  */
 
-// Generic Error Message
+// Generic styling
 const error = (input) => {
   input.parentElement.classList.add('not-valid');
   input.parentElement.classList.remove('valid');
   input.parentElement.lastElementChild.style.display = 'initial';
 };
 
+// Valid input styling
 const valid = (input) => {
   input.parentElement.classList.remove('not-valid');
   input.parentElement.classList.add('valid');
@@ -96,10 +97,10 @@ activityCheckboxes.forEach((checkbox) => {
  */
 
 /**
- * Validate user input fields 
+ * Returns boolean value of user input
  * @param {object} input input element to be validated
  * @param {object} regex expression to test the input value
- * @param {event} e used to prevent default behavior in case input value is invalid
+ * @returns {boolean} 
  */
 
 const validator = (input, regex) => {
@@ -114,6 +115,13 @@ const validator = (input, regex) => {
 
   return isValid;
 };
+
+/**
+ * Returns boolean value of user input and generates error styling
+ * @param {object} input input element to be validated
+ * @param {object} regex expression to test the input value
+ * @returns {boolean} 
+ */
 
 const emailValidator = (input, regex) => {
   value = input.value;
@@ -142,8 +150,9 @@ const emailValidator = (input, regex) => {
 };
 
 /**
-  Validate at least 1 activity is chosen
-*/
+ * Returns boolean value of activities chosen
+ * @returns {boolean}
+ */
 
 const activitiesValidator = () => {
   const isValid = workshops > 0;
@@ -267,10 +276,12 @@ payment.addEventListener('change', (e) => {
 
 /*
   TODO: Fix live error checking.
-  PROBLEM: Initial load displays error styling on inputs
-  SOLUTION: Refactor validator function? Use different event as listener?
+  PROBLEM: Keyup event triggers on tab navigation
+  SOLUTION: Use preventDefault? stopPropogation? Switch to keydown?
+  NOTE: Doesn't break functionality, but could be fixed.
 */
 
+// Real time validation
 nameInput.addEventListener('keyup', () => {
   validator(nameInput, nameRegEx);
 });
@@ -279,8 +290,10 @@ emailInput.addEventListener('keyup', () => {
   emailValidator(emailInput, emailRegEx);
 });
 
+// Apply validation to each checkbox
 activityCheckboxes.forEach((activity) => {
   activity.addEventListener('change', () => {
+    // track checked status
     activity.checked ? workshops++ : workshops--;
     activitiesValidator();
   });
@@ -304,7 +317,7 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
   }
 
-  // Only validate cc inputes if it is chosen as payment method
+  // Only validate cc inputs if it is chosen as payment method
   if (payment.value === 'credit-card') {
     validator(ccNum, ccRegEx);
     validator(zip, zipRegEx);
