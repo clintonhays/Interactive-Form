@@ -195,6 +195,7 @@ designSelect.addEventListener('change', (e) => {
     PROBLEM: Seems so redundant
     SOLUTION: ??? Refactor somehow...
   */
+
   if (design === 'js puns') {
     heartColors.forEach((color) => {
       color.hidden = true;
@@ -319,8 +320,12 @@ form.addEventListener('submit', (e) => {
 
   // Only validate cc inputs if it is chosen as payment method
   if (payment.value === 'credit-card') {
-    validator(ccNum, ccRegEx);
-    validator(zip, zipRegEx);
-    validator(cvv, cvvRegEx);
+    const number = validator(ccNum, ccRegEx);
+    const zipCode = validator(zip, zipRegEx);
+    const cvvCode = validator(cvv, cvvRegEx);
+
+    if ((number === false) | (zipCode === false) | (cvvCode === false)) {
+      e.preventDefault();
+    }
   }
 });
