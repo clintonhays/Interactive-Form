@@ -184,6 +184,7 @@ jobRoleSelect.addEventListener('change', (e) => {
 // Enable color selection based on tshirt design choice
 designSelect.addEventListener('change', (e) => {
   colorSelect.disabled = false;
+  colorSelect.remove(colorSelect.firstElementChild);
   const design = e.target.value;
 
   /*
