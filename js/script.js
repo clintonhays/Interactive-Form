@@ -141,9 +141,7 @@ const emailValidator = (input, regex) => {
     input.parentElement.lastElementChild.style.display = 'none';
   }
   if (isValid) {
-    input.parentElement.classList.remove('not-valid');
-    input.parentElement.classList.add('valid');
-    input.parentElement.lastElementChild.style.display = 'none';
+    valid(input);
   }
 
   return isValid;
