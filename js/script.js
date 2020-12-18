@@ -13,24 +13,17 @@ const otherRole = document.getElementById('other-job-role');
 // Tshirt Fields
 const designSelect = document.getElementById('design');
 const colorSelect = document.getElementById('color');
-const punsColors = document.querySelectorAll('[data-theme="js puns"]');
-const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 
 // Activities Fields
 const activitiesSet = document.getElementById('activities');
-const activitiesCost = document.getElementById('activities-cost');
 const activityCheckboxes = document.querySelectorAll('[type="checkbox"]');
 let workshops = 0;
 let totalCost = 0;
 
 // Payment Fields
 const payment = document.getElementById('payment');
-const ccInfo = document.getElementById('credit-card');
 const paypalInfo = document.getElementById('paypal');
 const bitcoinInfo = document.getElementById('bitcoin');
-const ccNum = document.getElementById('cc-num');
-const cvv = document.getElementById('cvv');
-const zip = document.getElementById('zip');
 
 /**
  * RegEx Variables
@@ -183,10 +176,12 @@ jobRoleSelect.addEventListener('change', (e) => {
 
 // Enable color selection based on tshirt design choice
 designSelect.addEventListener('change', (e) => {
+  const punsColors = document.querySelectorAll('[data-theme="js puns"]');
+  const heartColors = document.querySelectorAll('[data-theme="heart js"]');
+  const design = e.target.value;
   colorSelect.disabled = false;
   colorSelect.firstElementChild.innerHTML = 'Select a color';
   colorSelect.selectedIndex = 0;
-  const design = e.target.value;
 
   /*
     Using forEach to iterate through color select option and 
@@ -217,6 +212,7 @@ designSelect.addEventListener('change', (e) => {
 // Update cost and prevent selection of overlapping activity times
 activitiesSet.addEventListener('change', (e) => {
   const activity = e.target;
+  const activitiesCost = document.getElementById('activities-cost');
   const activityCost = activity.getAttribute('data-cost');
   const activityTime = activity.getAttribute('data-day-and-time');
 
@@ -252,7 +248,8 @@ activitiesSet.addEventListener('change', (e) => {
 
 // Hide or display cc info inputs based on payment selection
 payment.addEventListener('change', (e) => {
-  value = e.target.value;
+  const ccInfo = document.getElementById('credit-card');
+  const value = e.target.value;
 
   /*
     TODO: Refactor if/else if block to be more DRY
@@ -321,6 +318,9 @@ form.addEventListener('submit', (e) => {
 
   // Only validate cc inputs if it is chosen as payment method
   if (payment.value === 'credit-card') {
+    const ccNum = document.getElementById('cc-num');
+    const cvv = document.getElementById('cvv');
+    const zip = document.getElementById('zip');
     const number = validator(ccNum, ccRegEx);
     const zipCode = validator(zip, zipRegEx);
     const cvvCode = validator(cvv, cvvRegEx);
