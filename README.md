@@ -12,7 +12,7 @@ HTML5 email validation was avoided in favor of validation through JavaScript for
 
 ### Real Time Validation
 
-Real time validation is used on the name, email and activities elements. For name and email, keyup event listeners are employed. For the activity section change event lsiteners are used on each checkbox to update the validator accordingly. In addition, the email validation supports custom error messages for missing @ and spaces within the address.
+Real time validation is used on the name, email and activities elements. For name and email, keyup event listeners are employed. For the activity section change event listeners are used on each checkbox to update the validator accordingly when no activities are chosen or 1 or more activites are chosen. In addition, the email validation supports custom error messages for missing @ and spaces within the address.
 
 ## Accessibility
 
