@@ -184,6 +184,8 @@ jobRoleSelect.addEventListener('change', (e) => {
 // Enable color selection based on tshirt design choice
 designSelect.addEventListener('change', (e) => {
   colorSelect.disabled = false;
+  colorSelect.firstElementChild.innerHTML = 'Select a color';
+  colorSelect.selectedIndex = 0;
   const design = e.target.value;
 
   /*
@@ -201,7 +203,8 @@ designSelect.addEventListener('change', (e) => {
     punsColors.forEach((color) => {
       color.hidden = false;
     });
-  } else if (design === 'heart js') {
+  }
+  if (design === 'heart js') {
     punsColors.forEach((color) => {
       color.hidden = true;
     });
